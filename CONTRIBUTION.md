@@ -1,6 +1,6 @@
 # Contributions au projet Incident Response Generator
 
-## Implémentation de l'écran de détail d'incident
+## 1. Implémentation de l'écran de détail d'incident ✅
 
 ### Fonctionnalités implémentées
 
@@ -35,15 +35,40 @@
 3. `src/components/reports/IncidentPDFTemplate.js` - Modèle pour les exports PDF
 4. `src/utils/exportUtils.js` - Utilitaires pour l'exportation et le partage
 
-### Prochaines étapes
+## 2. Implémentation des formulaires de création ✅
+
+### Fonctionnalités implémentées
+
+1. **Formulaire de création de tâches ✅**
+   - `TaskCreateScreen.js` - Interface pour créer de nouvelles tâches associées à un incident
+   - Champs pour le titre, la description, l'assignation, les dates d'échéance
+   - Support pour les priorités, statuts et catégories de tâches
+
+2. **Formulaire d'ajout de preuves ✅**
+   - `EvidenceCreateScreen.js` - Interface pour ajouter des éléments de preuve
+   - Gestion des pièces jointes avec vérification de taille
+   - Champs pour les métadonnées (source, date de collecte, type de preuve, etc.)
+
+3. **Formulaire d'ajout d'événements chronologiques ✅**
+   - `TimelineCreateScreen.js` - Interface pour enregistrer des événements dans la chronologie
+   - Support pour les événements clés mis en évidence
+   - Horodatage précis avec date et heure
+
+4. **Formulaire d'édition d'incident ✅**
+   - `IncidentEditScreen.js` - Interface complète pour modifier les incidents existants
+   - Support pour tous les champs, y compris les nouvelles sections d'impact
+   - Formulaire pré-rempli avec les données de l'incident existant
+
+### Composants créés
+
+1. `src/components/TaskCreateScreen.js` - Création de tâches
+2. `src/components/EvidenceCreateScreen.js` - Ajout de preuves
+3. `src/components/TimelineCreateScreen.js` - Enregistrement d'événements chronologiques
+4. `src/components/IncidentEditScreen.js` - Édition d'incidents existants
+
+## Prochaines étapes
 
 Pour compléter l'amélioration de la plateforme selon le plan initial, il reste à implémenter :
-
-## 2. Implémentation des formulaires de création
-* `TaskCreateScreen.js` : pour créer de nouvelles tâches associées à un incident
-* `EvidenceCreateScreen.js` : pour ajouter des preuves avec gestion des pièces jointes
-* `TimelineCreateScreen.js` : pour enregistrer des événements dans la chronologie
-* `IncidentEditScreen.js` : pour modifier les incidents existants
 
 ## 3. Fonctionnalités de rapport et d'analyse
 * Créer un composant `ReportGenerator` pour générer des rapports standardisés
