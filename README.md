@@ -15,54 +15,50 @@ Une application React permettant de générer facilement des rapports détaillé
 
 ## Mode d'emploi
 
-### Installation
+### Installation et démarrage (méthode recommandée)
 
 Pour utiliser ce générateur de rapport d'incident, suivez ces étapes:
 
 1. **Prérequis:**
-   - Node.js (v16 ou supérieur)
-   - npm (v8 ou supérieur)
+   - Node.js (v16 ou supérieur) - [Télécharger depuis nodejs.org](https://nodejs.org/)
+   - npm (v8 ou supérieur, inclus avec Node.js)
 
-2. **Installation:**
+2. **Installation et démarrage:**
    ```bash
    # Cloner le dépôt
    git clone https://github.com/servais1983/incident-response-generator.git
 
    # Naviguer dans le répertoire
    cd incident-response-generator
+
+   # Installer les dépendances
+   npm install
+
+   # Démarrer l'application
+   npm start
    ```
 
-3. **Démarrage de l'application:**
-
-   **Pour Windows:**
-   - Méthode simple (recommandée):
-     ```
-     demarrer.bat
-     ```
-   - OU méthode alternative:
-     ```
-     start.bat
-     ```
-   - OU manuellement:
-     ```
-     npm install
-     npm start
-     ```
-
-   **Pour Linux/Mac:**
-   - Méthode simple:
-     ```
-     chmod +x start.sh
-     ./start.sh
-     ```
-   - OU manuellement:
-     ```
-     npm install
-     npm start
-     ```
-
-4. **Accès à l'application:**
+3. **Accès à l'application:**
    - L'application sera accessible à l'adresse http://localhost:3000 dans votre navigateur
+
+### Méthodes alternatives (scripts)
+
+Des scripts de démarrage sont inclus mais la méthode manuelle ci-dessus est plus fiable.
+
+**Pour Linux/Mac:**
+```
+chmod +x start.sh
+./start.sh
+```
+
+**Pour Windows:**
+```
+start.bat
+```
+ou
+```
+demarrer.bat
+```
 
 ### Utilisation
 
@@ -112,6 +108,25 @@ Pour utiliser ce générateur de rapport d'incident, suivez ces étapes:
    - Leçons apprises: ce qui a bien fonctionné et ce qui pourrait être amélioré
    - Actions recommandées: mesures à prendre pour éviter des incidents similaires
 
+## Résolution de problèmes
+
+### Problèmes courants
+
+Si vous rencontrez des erreurs lors de l'installation ou du démarrage:
+
+1. **Node.js n'est pas reconnu:**
+   - Assurez-vous d'avoir installé Node.js depuis [le site officiel](https://nodejs.org/)
+   - Redémarrez votre terminal ou invite de commande après l'installation
+   - Vérifiez l'installation avec `node -v` et `npm -v`
+
+2. **Erreurs d'installation des dépendances:**
+   - Essayez de supprimer le dossier `node_modules` et le fichier `package-lock.json` puis exécutez à nouveau `npm install`
+   - Si vous êtes derrière un proxy, configurez npm pour l'utiliser: `npm config set proxy http://your-proxy:port`
+
+3. **Le serveur ne démarre pas:**
+   - Vérifiez si le port 3000 n'est pas déjà utilisé par une autre application
+   - Essayez de redémarrer votre ordinateur et relancer l'application
+
 ## Déploiement
 
 Pour déployer cette application en production:
@@ -129,26 +144,6 @@ Pour déployer cette application en production:
      - Vercel
      - Firebase Hosting
      - Ou tout autre serveur web standard
-
-## Résolution de problèmes
-
-### Problèmes sous Windows
-
-Si vous rencontrez des erreurs lors du lancement des scripts batch:
-
-1. Essayez d'utiliser `demarrer.bat` qui est plus simple et plus robuste
-2. Ou exécutez manuellement les commandes suivantes:
-   ```
-   npm install
-   npm start
-   ```
-
-### Problèmes d'installation
-
-Si Node.js ou npm ne sont pas reconnus:
-1. Assurez-vous d'avoir installé Node.js depuis [le site officiel](https://nodejs.org/)
-2. Redémarrez votre terminal ou invite de commande après l'installation
-3. Vérifiez l'installation avec `node -v` et `npm -v`
 
 ## Personnalisation
 
