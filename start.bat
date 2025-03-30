@@ -5,7 +5,7 @@ echo Verification des dependances...
 :: Verifier si Node.js est installe
 where node >nul 2>nul
 if %ERRORLEVEL% neq 0 (
-    echo Node.js n'est pas installe. Veuillez installer Node.js (v16 ou superieur).
+    echo Node.js n'est pas installe. Veuillez installer Node.js v16 ou superieur.
     echo Visitez https://nodejs.org/ pour les instructions d'installation.
     pause
     exit /b 1
@@ -14,7 +14,7 @@ if %ERRORLEVEL% neq 0 (
 :: Verifier si npm est installe
 where npm >nul 2>nul
 if %ERRORLEVEL% neq 0 (
-    echo npm n'est pas installe. Veuillez installer npm (v8 ou superieur).
+    echo npm n'est pas installe. Veuillez installer npm v8 ou superieur.
     echo npm est generalement installe avec Node.js.
     pause
     exit /b 1
