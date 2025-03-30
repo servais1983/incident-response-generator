@@ -30,15 +30,38 @@ Pour utiliser ce générateur de rapport d'incident, suivez ces étapes:
 
    # Naviguer dans le répertoire
    cd incident-response-generator
-
-   # Installer les dépendances
-   npm install
-
-   # Démarrer l'application
-   npm start
    ```
 
-3. **Accès à l'application:**
+3. **Démarrage de l'application:**
+
+   **Pour Windows:**
+   - Méthode simple (recommandée):
+     ```
+     demarrer.bat
+     ```
+   - OU méthode alternative:
+     ```
+     start.bat
+     ```
+   - OU manuellement:
+     ```
+     npm install
+     npm start
+     ```
+
+   **Pour Linux/Mac:**
+   - Méthode simple:
+     ```
+     chmod +x start.sh
+     ./start.sh
+     ```
+   - OU manuellement:
+     ```
+     npm install
+     npm start
+     ```
+
+4. **Accès à l'application:**
    - L'application sera accessible à l'adresse http://localhost:3000 dans votre navigateur
 
 ### Utilisation
@@ -106,6 +129,26 @@ Pour déployer cette application en production:
      - Vercel
      - Firebase Hosting
      - Ou tout autre serveur web standard
+
+## Résolution de problèmes
+
+### Problèmes sous Windows
+
+Si vous rencontrez des erreurs lors du lancement des scripts batch:
+
+1. Essayez d'utiliser `demarrer.bat` qui est plus simple et plus robuste
+2. Ou exécutez manuellement les commandes suivantes:
+   ```
+   npm install
+   npm start
+   ```
+
+### Problèmes d'installation
+
+Si Node.js ou npm ne sont pas reconnus:
+1. Assurez-vous d'avoir installé Node.js depuis [le site officiel](https://nodejs.org/)
+2. Redémarrez votre terminal ou invite de commande après l'installation
+3. Vérifiez l'installation avec `node -v` et `npm -v`
 
 ## Personnalisation
 
