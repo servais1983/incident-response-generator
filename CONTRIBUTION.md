@@ -66,14 +66,37 @@
 3. `src/components/TimelineCreateScreen.js` - Enregistrement d'événements chronologiques
 4. `src/components/IncidentEditScreen.js` - Édition d'incidents existants
 
+## 3. Fonctionnalités de rapport et d'analyse ✅
+
+### Fonctionnalités implémentées
+
+1. **Générateur de rapports standardisés ✅**
+   - `ReportGenerator.js` - Interface pour générer différents types de rapports
+   - Options de personnalisation des rapports (sections à inclure, format de sortie)
+   - Prévisualisation du rapport avant génération
+   - Support pour plusieurs formats (PDF, texte, email)
+
+2. **Visualisations de données pour le tableau de bord ✅**
+   - `IncidentDashboard.js` - Tableau de bord complet avec graphiques et métriques
+   - Filtres interactifs pour affiner les données (période, type d'incident, sévérité)
+   - Visualisations des incidents par statut, type et sévérité
+   - Graphique de tendance pour suivre l'évolution des incidents
+
+3. **Métriques d'analyse pour le suivi des performances ✅**
+   - `PerformanceMetrics.js` - Métriques clés de performance (KPI) pour l'équipe
+   - Score de santé global avec jauge visuelle
+   - Mesures de temps de réponse, taux de résolution, conformité aux SLA
+   - Analyse comparative avec les périodes précédentes
+
+### Composants créés
+
+1. `src/components/reports/ReportGenerator.js` - Génération de rapports personnalisés
+2. `src/components/dashboard/IncidentDashboard.js` - Tableau de bord avec visualisations
+3. `src/components/analytics/PerformanceMetrics.js` - Métriques de performance
+
 ## Prochaines étapes
 
 Pour compléter l'amélioration de la plateforme selon le plan initial, il reste à implémenter :
-
-## 3. Fonctionnalités de rapport et d'analyse
-* Créer un composant `ReportGenerator` pour générer des rapports standardisés
-* Ajouter des visualisations de données sur le tableau de bord
-* Implémenter des métriques d'analyse pour le suivi des performances
 
 ## 4. Documentation et tests
 * Finaliser la documentation utilisateur avec des guides détaillés
