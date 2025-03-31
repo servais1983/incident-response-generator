@@ -1,4 +1,5 @@
 import { cachedFetch, globalCache } from './cacheUtils';
+import { createApiError, createNetworkError, createTimeoutError } from './errorHandling';
 
 /**
  * Configuration de base pour les requêtes API
@@ -19,6 +20,7 @@ class ApiService {
   constructor(config = {}) {
     this.config = { ...API_CONFIG, ...config };
     this.pendingRequests = new Map();
+    this.abortControllers = new Map();
   }
 
   /**
@@ -48,6 +50,8 @@ class ApiService {
       retries = 2,
       retryDelay = 1000,
       deduplicate = true,
+      timeout = this.config.timeout,
+      signal = null,
     } = options;
 
     const url = `${this.config.baseUrl}${endpoint}`;
@@ -59,17 +63,29 @@ class ApiService {
       return this.pendingRequests.get(requestKey);
     }
 
+    // Créer un AbortController pour pouvoir annuler la requête
+    const abortController = new AbortController();
+    const abortSignal = signal || abortController.signal;
+
+    // Enregistrer l'AbortController pour pouvoir annuler plus tard
+    this.abortControllers.set(requestKey, abortController);
+
     // Configuration de fetch
     const fetchOptions = {
       method,
       headers: { ...this.config.defaultHeaders, ...headers },
-      signal: AbortSignal.timeout(this.config.timeout),
+      signal: abortSignal,
     };
 
     // Ajout du corps de la requête pour les méthodes non-GET
     if (method !== 'GET' && data) {
       fetchOptions.body = JSON.stringify(data);
     }
+
+    // Définir un timeout
+    const timeoutId = setTimeout(() => {
+      abortController.abort('timeout');
+    }, timeout);
 
     // Fonction qui effectue la requête
     const doFetch = async () => {
@@ -84,14 +100,22 @@ class ApiService {
         try {
           const response = await fetch(fullUrl, fetchOptions);
 
-          // Supprimer la requête pendante
+          // Supprimer la requête pendante et l'AbortController
           if (deduplicate) {
             this.pendingRequests.delete(requestKey);
+            this.abortControllers.delete(requestKey);
           }
+
+          // Annuler le timeout
+          clearTimeout(timeoutId);
 
           // Vérifier si la réponse est réussie
           if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
+            throw createApiError(
+              `Erreur API: ${response.status} ${response.statusText}`,
+              response.status,
+              await response.json().catch(() => ({}))
+            );
           }
 
           return await response.json();
@@ -101,6 +125,19 @@ class ApiService {
           // Si c'est la dernière tentative, propager l'erreur
           if (attempt === retries) {
             this.pendingRequests.delete(requestKey);
+            this.abortControllers.delete(requestKey);
+            clearTimeout(timeoutId);
+            
+            // Déterminer le type d'erreur
+            if (error.name === 'AbortError') {
+              if (error.message === 'timeout') {
+                throw createTimeoutError(`La requête ${endpoint} a expiré`);
+              }
+              throw error; // Autres AbortError (annulation manuelle)
+            }
+            if (error.name === 'TypeError' && error.message.includes('Network')) {
+              throw createNetworkError(`Erreur réseau pour ${endpoint}`);
+            }
             throw error;
           }
           
@@ -181,10 +218,34 @@ class ApiService {
   }
 
   /**
+   * Annule une requête spécifique
+   * @param {string} endpoint - Point de terminaison de l'API
+   * @param {Object} params - Paramètres de la requête
+   */
+  cancelRequest(endpoint, params = {}) {
+    const requestKey = this.createRequestKey(endpoint, params);
+    const controller = this.abortControllers.get(requestKey);
+    
+    if (controller) {
+      controller.abort();
+      this.abortControllers.delete(requestKey);
+      this.pendingRequests.delete(requestKey);
+      return true;
+    }
+    
+    return false;
+  }
+
+  /**
    * Annule toutes les requêtes en cours
    */
   cancelAllRequests() {
-    // Supprimer toutes les requêtes en attente
+    // Annuler toutes les requêtes en attente
+    this.abortControllers.forEach(controller => {
+      controller.abort();
+    });
+    
+    this.abortControllers.clear();
     this.pendingRequests.clear();
   }
 }
