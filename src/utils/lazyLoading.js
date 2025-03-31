@@ -1,26 +1,15 @@
 import React, { lazy, Suspense } from 'react';
+import { ErrorBoundary } from './errorHandling';
 
 /**
- * Options pour le chargement paresseux (lazy loading)
+ * Options par défaut pour le chargement paresseux (lazy loading)
  */
 const defaultOptions = {
   fallback: <div className="flex items-center justify-center py-10">
     <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
   </div>,
-  errorComponent: ({ error, retry }) => (
-    <div className="p-6 text-center bg-red-50 dark:bg-red-900/20 rounded-lg">
-      <h3 className="text-lg font-medium text-red-800 dark:text-red-300 mb-2">Erreur de chargement</h3>
-      <p className="text-red-700 dark:text-red-200 mb-4">{error?.message || 'Une erreur est survenue lors du chargement du composant.'}</p>
-      {retry && <button
-        onClick={retry}
-        className="px-4 py-2 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 rounded hover:bg-red-200 dark:hover:bg-red-700 transition-colors"
-      >
-        Réessayer
-      </button>}
-    </div>
-  ),
-  onError: (error) => console.error('Lazy loading error:', error),
   minDelay: 300, // Délai minimum pour éviter les flashs de chargement
+  retry: true, // Permettre de réessayer le chargement en cas d'erreur
 };
 
 /**
@@ -32,11 +21,12 @@ const defaultOptions = {
 export const lazyLoad = (importFunction, options = {}) => {
   const {
     fallback,
-    errorComponent: ErrorComponent,
+    minDelay,
+    retry,
     onError,
-    minDelay
   } = { ...defaultOptions, ...options };
 
+  // Composant avec chargement paresseux
   const LazyComponent = lazy(() => {
     // Ajouter un délai minimum pour éviter les flashs
     const startTime = Date.now();
@@ -58,66 +48,34 @@ export const lazyLoad = (importFunction, options = {}) => {
     });
   });
 
+  // Composant d'erreur personnalisé
+  const ErrorFallback = ({ error, resetError }) => (
+    <div className="p-6 text-center bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm">
+      <h3 className="text-lg font-medium text-red-800 dark:text-red-300 mb-2">
+        Erreur de chargement du composant
+      </h3>
+      <p className="text-red-700 dark:text-red-200 mb-4">
+        Un problème est survenu lors du chargement de cette partie de l'application.
+      </p>
+      {retry && (
+        <button
+          onClick={resetError}
+          className="px-4 py-2 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 rounded hover:bg-red-200 dark:hover:bg-red-700 transition-colors"
+        >
+          Réessayer
+        </button>
+      )}
+    </div>
+  );
+
   // Composant wrapper avec gestion d'erreur
-  const WithErrorHandling = (props) => {
-    const [error, setError] = React.useState(null);
-
-    // Fonction pour réessayer de charger le composant
-    const retryLoading = () => {
-      setError(null);
-    };
-
-    // Si une erreur s'est produite, afficher le composant d'erreur
-    if (error) {
-      return <ErrorComponent error={error} retry={retryLoading} />;
-    }
-
-    return (
+  return (props) => (
+    <ErrorBoundary fallback={ErrorFallback}>
       <Suspense fallback={fallback}>
-        <ErrorBoundary onError={setError}>
-          <LazyComponent {...props} />
-        </ErrorBoundary>
+        <LazyComponent {...props} />
       </Suspense>
-    );
-  };
-
-  return WithErrorHandling;
-};
-
-/**
- * Composant ErrorBoundary pour capturer les erreurs de rendu
- */
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    if (this.props.onError) {
-      this.props.onError(error);
-    }
-    console.error('Error in component:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // Si l'erreur a déjà été passée au composant parent via onError,
-      // nous n'avons pas besoin d'afficher quoi que ce soit ici
-      return null;
-    }
-
-    return this.props.children;
-  }
-}
-
-// Précharger un composant (utile pour les composants fréquemment utilisés)
-export const preloadComponent = (importFunction) => {
-  importFunction();
+    </ErrorBoundary>
+  );
 };
 
 // Exportation de composants communs avec chargement paresseux
@@ -129,14 +87,24 @@ export const LazyIncidentEditScreen = lazyLoad(() =>
   import('../components/IncidentEditScreen')
 );
 
-export const LazyEvidenceCreateScreen = lazyLoad(() =>
-  import('../components/EvidenceCreateScreen')
-);
-
 export const LazyTaskCreateScreen = lazyLoad(() =>
   import('../components/TaskCreateScreen')
+);
+
+export const LazyEvidenceCreateScreen = lazyLoad(() =>
+  import('../components/EvidenceCreateScreen')
 );
 
 export const LazyTimelineCreateScreen = lazyLoad(() =>
   import('../components/TimelineCreateScreen')
 );
+
+// Précharger un composant pour les sections fréquemment visitées
+export const preloadComponent = (importFunction) => {
+  importFunction();
+};
+
+// Fonction utilitaire pour précharger un groupe de composants
+export const preloadComponents = (components) => {
+  components.forEach(component => component.preload && component.preload());
+};
