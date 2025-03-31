@@ -1,5 +1,6 @@
 import React from 'react';
 import IncidentResponseGenerator from './components/IncidentResponseGenerator';
+import ResponsiveLayout from './components/ResponsiveLayout';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import NotificationContainer from './components/ui/NotificationContainer';
@@ -24,7 +25,9 @@ function App() {
     <ThemeProvider>
       <NotificationProvider>
         <div className="min-h-screen bg-gray-50 dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary transition-theme duration-200">
-          <IncidentResponseGenerator />
+          <ResponsiveLayout>
+            <IncidentResponseGenerator />
+          </ResponsiveLayout>
           <NotificationContainer />
           <KeyboardShortcutsHelp shortcuts={keyboardShortcuts} />
         </div>
