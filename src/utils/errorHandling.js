@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Utilitaires pour la gestion des erreurs
  */
@@ -209,3 +211,48 @@ export const setupGlobalErrorHandling = () => {
     logError(error, 'Unhandled Promise Rejection');
   });
 };
+
+/**
+ * Composant ErrorBoundary pour capturer les erreurs de rendu
+ */
+export class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    logError(error, 'Component Error');
+    console.error('Error in component:', errorInfo);
+    
+    if (this.props.onError) {
+      this.props.onError(error);
+    }
+  }
+
+  resetError = () => {
+    this.setState({ hasError: false, error: null });
+  };
+
+  render() {
+    if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback(this.state.error, this.resetError);
+      }
+      
+      return (
+        <ErrorDisplay 
+          error={this.state.error}
+          onRetry={this.resetError}
+          onDismiss={this.props.onDismiss}
+        />
+      );
+    }
+
+    return this.props.children;
+  }
+}
