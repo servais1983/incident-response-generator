@@ -1,8 +1,11 @@
+![image](https://github.com/user-attachments/assets/cfa07148-d48c-482d-b6c0-89591404faa3)
+
+
 # Générateur de Rapport d'Incident de Sécurité
 
 Une application React permettant de générer facilement des rapports détaillés d'incidents de sécurité informatique en français.
 
-![Aperçu de l'application](https://via.placeholder.com/800x400?text=G%C3%A9n%C3%A9rateur+de+Rapport+d%27Incident)
+
 
 ## Fonctionnalités
 
