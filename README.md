@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/cfa07148-d48c-482d-b6c0-89591404faa3)
+![image](incident.png)
 
 # 📊 Générateur de Rapport d'Incident de Sécurité
 
